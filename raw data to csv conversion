@@ -1,0 +1,109 @@
+```import pandas as pd
+import numpy as np
+import warnings
+warnings.filterwarnings('ignore')
+df=pd.read_csv(r"C:\Users\InGo Electric\Downloads\eV_battery_may_Voltage_DOD_cutoff.txt",sep=";")
+df.fillna(0,inplace=True)
+df.replace(['0x',''], ['',''], regex=True,inplace=True)
+df.drop(columns="Unnamed: 12",inplace=True)
+df1=df[df['ID'].str.contains('101')]
+df2=df[df['ID'].str.contains('102')]
+df3=df[df['ID'].str.contains('103')]
+df4=df[df['ID'].str.contains('104')]
+df5=df[df['ID'].str.contains('105')]
+df6=df[df['ID'].str.contains('106')]
+df["Time"]=df.groupby('ID')['Time'].diff(-1) * (-1)
+df1['102'] = df1['D0'] + df1['D1']
+df1["102"]=df1["102"].apply(lambda x:str(int(str(x),16)))
+df1['102'] = df1['102'].astype(float) *0.001
+df2['102'] = df2['D0'] + df2['D1']
+df2["102"]=df2["102"].apply(lambda x:str(int(str(x),16)))
+df2['102'] = df2['102'].astype(float) *0.00
+df3['103'] = df3['D0'] + df3['D1']
+df3["103"]=df3["103"].apply(lambda x:str(int(str(x),16)))
+df3['103'] = df3['103'].astype(float) *0.001
+df5['105'] = df5['D1'] + df5['D0']
+df5["105"]=df5["105"].apply(lambda x:str(int(str(x),16)))
+df5['105'] = df5['105'].astype(float) *0.001
+df5.rename(columns = {'105':'Voltage'}, inplace = True)
+df6['106'] = df6['D1']+df6["D0"]
+df6["106"]=df6["106"].apply(lambda x:str(int(str(x),16)))
+df6['106'] = df6['106'].astype(float)*0.001
+df6.rename(columns = {'106':'Current'}, inplace = True)
+df7=df[df['ID'].str.contains('107')]
+df8=df[df['ID'].str.contains('108')]
+df9=df[df['ID'].str.contains('109')]
+df10=df[df['ID'].str.contains('10A')]
+df11=df[df['ID'].str.contains('10B')]
+df12=df[df['ID'].str.contains('10C')]
+df13=df[df['ID'].str.contains('10C')]
+df14=df[df['ID'].str.contains('115')]
+df15=df[df['ID'].str.contains('116')]
+df8['108'] = df8['D1']+df8["D0"]
+df8["108"]=df8["108"].apply(lambda x:str(int(str(x),16)))
+df8.rename(columns = {'108':'Battery Capacity'}, inplace = True)
+df8['Battery Capacity'] = df8['Battery Capacity'].astype(float)*0.001
+df8["Battery Health"]=df8["D2"]
+df8["Battery Health"]=df8["Battery Health"].apply(lambda x:str(int(str(x),16)))
+df8["SOC"]=df8["D3"]
+df8["SOC"]=df8["SOC"].apply(lambda x:str(int(str(x),16)))
+df5.reset_index(drop=True, inplace=True)
+df6.reset_index(drop=True, inplace=True)
+df8.reset_index(drop=True, inplace=True)
+d1 = df6["Current"]
+data1 = pd.concat([df5,d1], axis = 1)
+d2= df8[["Battery Capacity", "Battery Health","SOC"]]
+d2.reset_index(drop=True, inplace=True)
+data2 = pd.concat([data1,d2], axis = 1)
+df9['V1'] = df9['D1'] + df9['D0']
+df9['V2'] = df9['D3'] + df9['D2']
+df9['V3'] = df9['D5'] + df9['D4']
+df9['V4'] = df9['D7'] + df9['D6']
+df9["V1"]=df9["V1"].apply(lambda x:str(int(str(x),16)))
+df9["V2"]=df9["V2"].apply(lambda x:str(int(str(x),16)))
+df9["V3"]=df9["V3"].apply(lambda x:str(int(str(x),16)))
+df9["V4"]=df9["V4"].apply(lambda x:str(int(str(x),16)))
+df9['V1'] = df9['V1'].astype(float) *0.001
+df9['V2'] = df9['V2'].astype(float) *0.001
+df9['V3'] = df9['V3'].astype(float) *0.001
+df9['V4'] = df9['V4'].astype(float) *0.001
+d3= df9[["V1","V2","V3","V4"]]
+d3.reset_index(drop=True, inplace=True)
+data3 = pd.concat([data2,d3], axis = 1)
+df10["V5"]=df10["D1"]+df10["D0"]
+df10["V6"]=df10["D3"]+df10["D2"]
+df10["V7"]=df10["D5"]+df10["D4"]
+df10["V8"]=df10["D7"]+df10["D6"]
+df10["V5"]=df10["V5"].apply(lambda x:str(int(str(x),16)))
+df10["V6"]=df10["V6"].apply(lambda x:str(int(str(x),16)))
+df10["V7"]=df10["V7"].apply(lambda x:str(int(str(x),16)))
+df10["V8"]=df10["V8"].apply(lambda x:str(int(str(x),16)))
+df10['V5'] = df10['V5'].astype(float) *0.001
+df10['V6'] = df10['V6'].astype(float) *0.001
+df10['V7'] = df10['V7'].astype(float) *0.001
+df10['V8'] = df10['V8'].astype(float) *0.001
+d4= df10[["V5","V6","V7","V8"]]
+d4.reset_index(drop=True, inplace=True)
+data4 = pd.concat([data3,d4], axis = 1)
+df11["V9"]=df11["D1"]+df11["D0"]
+df11["V10"]=df11["D3"]+df11["D2"]
+df11["V11"]=df11["D5"]+df11["D4"]
+df11["V12"]=df11["D7"]+df11["D6"]
+df11["V9"]=df11["V9"].apply(lambda x:str(int(str(x),16)))
+df11["V10"]=df11["V10"].apply(lambda x:str(int(str(x),16)))
+df11["V11"]=df11["V11"].apply(lambda x:str(int(str(x),16)))
+df11["V12"]=df11["V12"].apply(lambda x:str(int(str(x),16)))
+df11['V9'] = df11['V9'].astype(float) *0.001
+df11['V10'] = df11['V10'].astype(float) *0.001
+df11['V11'] = df11['V11'].astype(float) *0.001
+df11['V12'] = df11['V12'].astype(float) *0.001
+d5= df11[["V9","V10","V11","V12"]]
+d5.reset_index(drop=True, inplace=True)
+data5 = pd.concat([data4,d5], axis = 1)
+df12['V13'] = df12['D1'] + df12['D0']
+df12["V13"]=df12["V13"].apply(lambda x:str(int(str(x),16)))
+df12['V13'] = df12['V13'].astype(float) *0.001
+d6= df12["V13"]
+d6.reset_index(drop=True, inplace=True)
+data6= pd.concat([data5,d6], axis = 1)
+data6.to_csv(r"C:\Users\InGo Electric\Downloads\New_eV_battery_may_Voltage_DOD_cutoff.csv")```
